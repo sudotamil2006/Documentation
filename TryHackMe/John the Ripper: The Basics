@@ -1,0 +1,226 @@
+John the Ripper – Basic Documentation (My Learning Notes)
+
+This documentation is a summary of what I studied and practiced while learning John the Ripper (JtR) for one week. I tried to write this in a simple way so that anybody can understand it easily. Some parts may have small grammar mistakes because I wrote it like how I actually speak.
+
+
+---
+
+1. Introduction to John the Ripper
+
+John the Ripper (JtR) is an open-source password-cracking tool used by security researchers, penetration testers, and ethical hackers. It supports many different hash types from Linux, Windows, compressed files, documents, SSH keys, and more.
+
+My learning mainly focused on setting it up, identifying hashes, cracking different file types, and understanding how password storage works.
+
+
+---
+
+2. Setting Up the System
+
+I used Kali Linux and sometimes a normal Linux machine. Installing John is simple:
+
+sudo apt update
+sudo apt install john -y
+
+I also installed hash-identifier tools and downloaded a Python script (hash.py) from GitHub to detect unknown hash types.
+
+
+---
+
+3. Identifying Hashes (hash.py)
+
+One of the most important steps before cracking is to understand what hash type you're dealing with.
+
+I downloaded a hash.py tool from GitHub which prints possible hash formats based on the hash pattern.
+
+python3 hash.py <hash>
+
+It identifies hash formats like:
+
+MD5
+
+SHA-256
+
+bcrypt
+
+LM/NT hashes
+
+Zip file hashes
+
+
+This helped me understand how different hashes look.
+
+
+---
+
+4. How Passwords Are Stored (Linux vs Windows)
+
+During my learning, I studied where passwords are stored inside both OS.
+
+Linux Password Storage
+
+Linux stores user credentials in:
+
+/etc/passwd → contains username + ID info (no passwords)
+
+/etc/shadow → contains actual hashed passwords
+
+
+Example Linux hash format:
+
+$6$123abcf$longhashvalue...
+
+$6$ means SHA-512.
+
+To crack a Linux shadow file:
+
+unshadow /etc/passwd /etc/shadow > combined.txt
+john combined.txt
+
+Windows Password Storage
+
+Windows stores passwords inside the SAM file. The most common hash types:
+
+LM Hash (old)
+
+NT Hash (NTLM)
+
+
+After extracting using tools like samdump2:
+
+john --format=nt hashes.txt
+
+This gave me a clear difference between both systems.
+
+
+---
+
+5. Basic Cracking Modes in John
+
+I practiced three main modes:
+
+a) Single Crack Mode
+
+This uses the username and other metadata to guess passwords.
+
+john --single hashes.txt
+
+b) Wordlist Mode
+
+Using a custom wordlist:
+
+john --wordlist=mylist.txt hashes.txt
+
+c) Incremental Mode
+
+Brute force mode.
+
+john --incremental hashes.txt
+
+
+---
+
+6. Custom Rules
+
+I also studied how to create custom rules for modifying wordlists.
+
+Example from my test (simple rule):
+
+[List.Rules:MyRules]
+Az"123"
+
+This rule takes a word and adds 123 at the end.
+
+Run it:
+
+john --wordlist=mylist.txt --rules=MyRules hashes.txt
+
+I experimented with multiple rules to generate more realistic password patterns.
+
+
+---
+
+7. Cracking ZIP File Passwords
+
+To crack zip files:
+
+Extract hash:
+
+zip2john myfile.zip > zip_hash.txt
+
+Then crack:
+
+john zip_hash.txt
+
+This was one of the easiest modes and helped me understand file-based hash cracking.
+
+
+---
+
+8. Cracking Raw Hashes
+
+I learned about the --format=raw-xxx options.
+
+Example:
+
+john --format=raw-md5 hash.txt
+
+This helped when hash.py told me the hash type.
+
+
+---
+
+9. Cracking SSH Private Keys
+
+I practiced cracking encrypted SSH private keys.
+
+First convert to hash:
+
+ssh2john id_rsa > ssh_hash.txt
+
+Then run John:
+
+john ssh_hash.txt
+
+This was a little slow but really cool to learn.
+
+
+---
+
+10. Summary of My Learning Journey
+
+Over one week, I learned:
+
+How to install and set up John
+
+How to identify hashes
+
+Difference between Linux and Windows password storage
+
+How to crack Linux shadow files
+
+How to crack Windows NT hashes
+
+Single mode, wordlist mode, incremental mode
+
+How custom rules work
+
+Cracking ZIP file passwords
+
+Cracking raw hashes
+
+Cracking SSH private keys
+
+
+Mostly I used AI help instead of watching any tutorials, so each topic took time, but I understood it deeply.
+
+
+---
+
+11. Final Notes
+
+This document is not professional-level documentation. This is more like a personal learning file. I wrote it the way I understood the concepts. Anyone reading this should use this only for educational and ethical hacking purposes.
+
+
+---
+
+End of Document
