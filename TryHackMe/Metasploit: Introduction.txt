@@ -1,0 +1,23 @@
+---
+
+My Metasploit Introduction Notes :-
+
+Metasploit is a penetration testing framework that hackers use to find weakness and attack systems. 
+In this TryHackMe room I only learn the very basics. Metasploit mainly have 3 important parts: Exploit, Payload and Auxiliary. 
+Exploit is the actual attack code that use the vulnerability in the target system.
+Payload is what runs after the exploit success, like reverse shell or meterpreter.
+Auxiliary modules are not attacks but for scanning and gathering info, like scanning ports or checking versions.
+
+Metasploit works mostly inside msfconsole, which is the main terminal for using all modules. 
+I learned basic commands like search, use, show options, and set for things like RHOSTS and LHOST. 
+After setting all options, we run the exploit to try get access.
+
+Meterpreter is a special type of payload that give more control on the target, like file upload, screenshot, etc.
+But in this room they only talk very small about it. This room is mainly just an introduction and shows how Metasploit modules are arranged and used.
+
+So overall, I understand only the core idea: Exploit = attack, Payload = action after attack, Auxiliary = scanning tools. 
+And msfconsole is where we control everything. That’s mostly what this room teach.
+
+
+---
+
